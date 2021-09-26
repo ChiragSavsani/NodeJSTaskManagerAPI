@@ -29,9 +29,8 @@ router.post('/users', async (req, res) => {
 router.post('/users/login', async (req, res) => {
 
     try {
-        const user = await User.findUserByCredentials(req.body.email, req.body.password)
+        const user = await User.findUserByCredentials(req.body.email, req.body.password)    
         const token = await user.generateAuthToken()
-
         res.send({ user, token })
     } catch (e) {
         res.status(400).send()
@@ -106,7 +105,6 @@ router.get('/users/me', auth, async (req, res) => {
 router.patch('/users/me', auth, async (req, res) => {
 
     const updates = Object.keys(req.body)
-    console.log(updates)
     const allowedupdates = ['name', 'email', 'password', 'age']
     const isValidOperation = updates.every((update) => allowedupdates.includes(update))
 
@@ -132,7 +130,8 @@ router.delete('/users/me', auth, async (req, res) => {
         // }
         await req.user.remove()
         sendCancelEmail(req.user.email, req.user.name)
-        res.send({ message: 'Your account deleted successfully...' })
+        //res.send({ message: 'Your account deleted successfully...' })
+        res.send(req.user)
     } catch (e) {
         res.status(500).send()
     }
